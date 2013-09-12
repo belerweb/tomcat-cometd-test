@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<title>Tomcat cometd Test</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="css/bootstrap.css" rel="stylesheet" />
+</head>
+<body>
+	<div class="container">
+		<div class="row">
+			<ul id="messages"
+				style="height: 200px; margin-top: 10px; border: 1px solid gray;">
+			</ul>
+		</div>
+		<div class="row">
+			<div class="span10">
+				<input id="message" type="text" style="width: 100%;">
+			</div>
+			<div class="span2">
+				<button id="send" type="button" class="btn" style="width: 100%;">发送</button>
+			</div>
+		</div>
+	</div>
+	<script src="js/jquery.js"></script>
+	<script src="js/cometd.js"></script>
+	<script type="text/javascript">
+		$.cometd.unregisterTransport('websocket');
+		$.cometd.init({
+			logLevel : 'debug',
+			url : 'cometd'
+		});
+		$.cometd.subscribe('/chat', function(event) {
+			$('#messages').append('<li>' + event.data.message + '</li>');
+		});
+		$('#send').click(function() {
+			$.cometd.publish('/chat', {
+				message : $('#message').val()
+			});
+		});
+	</script>
+</body>
+</html>
